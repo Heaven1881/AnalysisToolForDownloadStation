@@ -1,15 +1,24 @@
 # encoding:utf8
 
 import time
+import ConfigParser
+
 import ds_api
 
 MB = 1024 * 1024.0
 GB = 1024 * MB
 HOUR = 3600.0
 DAY = 24 * HOUR
+CONFIG_PATH = 'config.ini'
 
-ds = ds_api.DownloadStationAPI('localhost')
-ds.login('username', 'password')
+config = ConfigParser.ConfigParser()
+config.read(CONFIG_PATH)
+
+ds = ds_api.DownloadStationAPI(config.get('DownloadStation', 'host'))
+ds.login(
+    config.get('DownloadStation', 'username'),
+    config.get('DownloadStation', 'password')
+)
 
 download_task_list = ds.get_download_task()
 sort_task_list = []
